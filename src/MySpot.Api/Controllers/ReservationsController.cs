@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MySpot.Api.Models;
+using MySpot.Api.Commands;
+using MySpot.Api.DTO;
+using MySpot.Api.Entities;
+using MySpot.Api.Services;
 
 namespace MySpot.Api.Controllers;
 
@@ -7,43 +10,54 @@ namespace MySpot.Api.Controllers;
 [Route("reservations")]
 public class ReservationsController : ControllerBase
 {
-    private int _id = 1;
-    private readonly List<Reservation> _reservations = new();
-
-    private readonly List<string> _parkingSpotName = new()
-    {
-        "P1", "P2", "P3", "P4", "P5"
-    };
+    private readonly ReservationsService _service = new();
 
     [HttpGet]
-    public void Get()
+    public ActionResult<IEnumerable<ReservationDto>> Get() => Ok(_service.GetAllWeekly());
+
+    [HttpGet("{id:guid}")]
+    public ActionResult<ReservationDto> Get(Guid id)
     {
+        var reservation = _service.Get(id);
+        if (reservation is null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(reservation);
     }
-    
+
     [HttpPost]
-    public void Post(Reservation reservation)
+    public ActionResult Post(CreateReservation command)
     {
-        if (_parkingSpotName.All(x => x != reservation.ParkingSpotName))
+        var id = _service.Create(command with {ReservationId = Guid.NewGuid()});
+        if (id is null)
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            return;
-        }
-
-        var reservationAlreadyExists = _reservations.Any(x =>
-            x.ParkingSpotName == reservation.ParkingSpotName &&
-            x.Date.Date == reservation.Date.Date);
-
-        if (reservationAlreadyExists)
-        {
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            return;
+            return BadRequest();
         }
         
-        reservation.Id = _id;
-        reservation.Date = DateTime.UtcNow.AddDays(1);
-        _id++;
+        return CreatedAtAction(nameof(Get), new {id}, null);
+    }
+
+    [HttpPut("{id:guid}")]
+    public ActionResult Put(Guid id ,ChangeReservationLicensePlate command)
+    {
+        if (_service.Update(command with{ReservationId = id}))
+        {
+            return NoContent();
+        }
         
-        _reservations.Add(reservation);
+        return NotFound();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public ActionResult Delete(Guid id, DeleteReservation command)
+    {
+        if (_service.Delete(new DeleteReservation(id)))
+        {
+            return NoContent();
+        }
         
+        return NotFound();
     }
 }
