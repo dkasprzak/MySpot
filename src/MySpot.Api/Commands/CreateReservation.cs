@@ -1,4 +1,6 @@
-﻿namespace MySpot.Api.Commands;
+﻿using MySpot.Api.ValueObjects;
 
-public record CreateReservation(Guid ParkingSpotId, Guid ReservationId,  DateTime Date,
+namespace MySpot.Api.Commands;
+
+public record CreateReservation(Guid ParkingSpotId, Guid ReservationId,  DateTimeOffset Date,
     string EmployeeName, string LicensePlate);
