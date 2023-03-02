@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace MySpot.Infrastructure;
+namespace MySpot.Core;
 
 public static class Extensions
 {

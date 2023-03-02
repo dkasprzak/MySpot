@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MySpot.Application.Services;
 
-namespace MySpot.Infrastructure;
+namespace MySpot.Application;
 
 public static class Extensions
 {
