@@ -2,7 +2,7 @@
 
 namespace MySpot.Api.ValueObjects;
 
-public record ParkingSpotId
+public sealed record ParkingSpotId
 {
     public Guid Value { get; }
 

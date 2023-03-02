@@ -3,6 +3,7 @@ using MySpot.Api.Commands;
 using MySpot.Api.DTO;
 using MySpot.Api.Entities;
 using MySpot.Api.Services;
+using MySpot.Api.ValueObjects;
 
 namespace MySpot.Api.Controllers;
 
@@ -10,8 +11,13 @@ namespace MySpot.Api.Controllers;
 [Route("reservations")]
 public class ReservationsController : ControllerBase
 {
-    private readonly ReservationsService _service = new();
+    private readonly IReservationsService _service;
 
+    public ReservationsController(IReservationsService service)
+    {
+        _service = service;
+    }
+ 
     [HttpGet]
     public ActionResult<IEnumerable<ReservationDto>> Get() => Ok(_service.GetAllWeekly());
 

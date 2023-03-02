@@ -16,6 +16,7 @@ public record ParkingSpotName
         Value = value;
     }
 
+    public  static ParkingSpotId Create() => new(Guid.NewGuid());
     public static implicit operator string(ParkingSpotName parkingSpotName) => parkingSpotName.Value;
     public static implicit operator ParkingSpotName(string parkingSpotName) => new(parkingSpotName);
 }
