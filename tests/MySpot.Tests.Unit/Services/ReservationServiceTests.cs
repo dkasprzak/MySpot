@@ -11,15 +11,15 @@ namespace MySpot.Tests.Unit.Services;
 public class ReservationServiceTests
 {
     [Fact]
-    public void create_reservation_for_not_taken_date_add_reservation_should_succeed()
+    public async Task create_reservation_for_not_taken_date_add_reservation_should_succeed()
     {
         // ARRANGE
-        var weeklyParkingSpot = _weeklyParkingSpotRepository.GetAll().First();
+        var weeklyParkingSpot = (await _weeklyParkingSpotRepository.GetAllAsync()).First();
         var command = new CreateReservation(weeklyParkingSpot.Id, Guid.NewGuid(), 
             DateTime.UtcNow.AddMinutes(5), "John Doe", "XYZ123");
 
         // ACT
-        var reservationId = _reservationsService.Create(command);
+        var reservationId = await _reservationsService.CreateAsync(command);
         
         // ASSERT
         reservationId.ShouldNotBeNull();

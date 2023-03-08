@@ -1,0 +1,1 @@
+dotnet ef migrations add "Update" -o ./DAL/Migrations --startup-project ../MySpot.Api

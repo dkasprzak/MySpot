@@ -6,7 +6,7 @@ namespace MySpot.Core.Entities;
 public class WeeklyParkingSpot
 {
 
-    public ParkingSpotId Id { get; private set; }
+    public ParkingSpotId Id { get; }
     public Week Week { get; private set; }
     public ParkingSpotName Name { get; private set;}
     public IEnumerable<Reservation> Reservations => _reservations;
